@@ -1,4 +1,4 @@
-# requirements
+# This is the test definition
 # Rules
 An email with the link to your solution must be sent to ml@bink.com within 48 hours of receipt of the test. The contents must include:
 Deliverables:
@@ -57,9 +57,8 @@ Don’t forget the ReadMe
 
 Avoid creating additional requirements.
 
+# __________________________________________________________
 
+most recent data set at the url given above is
 
-https://data.gov.uk/dataset/mobile-phone-masts
-
-most recent
 https://datamillnorth.org/download/mobile-phone-masts/f027f462-3621-4dba-8917-dc35d70a0fb2/Mobile%2520Phone%2520Masts%252001.04.2019a.csv
