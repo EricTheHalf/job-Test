@@ -216,4 +216,21 @@ opts.append("allRequirements")
 opts.append("allTests")
 opts.append("all")
 
+def allRequirements():
+    T1()
+    T2()
+    T3()
+    T4()
+
+def allTests():
+    T1_tests()
+    T2_tests()
+    T3_tests()
+    T4_tests()
+    
+def all():
+    allTests()
+    allRequiremens()
+
+
 fieldnames, db = loadMastData()
