@@ -122,7 +122,7 @@ def T1_tests():
     if len(test) == 5:
         ansT = ans % "Correct number of rows output"
     else:
-        ansT = ans % ("%s rows output - should be 5" % str(n))
+        ansT = ans % ("FAIL! %s rows output - should be 5" % str(n))
     # expecting db sorted by Current Rent ascending
     good = True
     fieldnamesI = fieldnames.index("Current Rent") # inserted as sort field
@@ -133,18 +133,54 @@ def T1_tests():
     if good: 
         ansT += ans % "Data is sorted"
     else:
-        ansT += ans % "Data is not sorted"
+        ansT += ans % "FAIL! Data is not sorted"
     return ansT
 
 def T2():
     global fieldnames, db
+    ans = []
+    fieldI = fieldnames.index("Lease Years")
+    rentI = fieldnames.index("Current Rent")
+    totalRent = 0
+    for row in db:
+        if row[fieldI] == 25:
+            ans.append(row)
+            totalRent += row[rentI]
+    print(repr(fieldnames))
+    for row in ans:
+        print(repr(row))
+    print( "Total rent = %s" % str(totalRent))
+    return ans
 
 def T2_tests():
     global fieldnames, db
     #expecting all Lease Years to be 25
+    test = T2()
+    ans = "\nTask 2: %s "
+    fieldI = fieldnames.index("Lease Years")
+    good = True
+    for row in test:
+        if test[fieldI] != 25:
+            good = False
+    if good:
+        return ans % "All correctly 25 years"
+    else:
+        return ans % "FAIL! Not all 25 years"        
 
 def T3():
     global fieldnames, db
+    tenntI = fieldnames.index("Tenant Name")
+    ans = {}
+    for row in db:
+        tennt = row[tenntI]
+        if ans.get( tennt, None ) == None:
+            ans[tennt] = 1
+        else:
+            ans[tennt] = ans[tennt] + 1
+    print("Task 3")
+    print("======")
+    print("Count\t\tTennant")
+    [print(str(v) +"\t\t" + k) for k,v in ans.items()]
 
 def T3_tests():
     global fieldnames, db
