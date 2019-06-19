@@ -13,4 +13,12 @@ def loadMastData():
     csvDict = csv.DictReader(req.splitlines())
 
 def loadMasterData_tests():
+    # expecting 42 rows
+    i = 0
+    for row in csvDict:
+        i+=1
+    if i ==42:
+        return "Correct number of rows loaded"
+    else:
+        return "i rows imported - should be 42"
     
