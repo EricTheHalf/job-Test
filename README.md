@@ -1,3 +1,10 @@
+Notes - still to complete:
+
+Some of the output formatting is very basic
+Command line parameters
+
+
+
 # This is the test definition
 # Rules
 An email with the link to your solution must be sent to ml@bink.com within 48 hours of receipt of the test. The contents must include:
