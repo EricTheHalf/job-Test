@@ -1,5 +1,35 @@
 import csv
 import urllib.request
+from datetime import datetime, date
+import getopt
+import sys
+
+def cleanMastData(fieldnames, db):
+    """
+        Clean numerics into floats defaulting to 0
+            Lease Years
+            Current Rent
+        Clean dates into datetime dates defaulting to today (for no good reason - there is no domain knowledge available)
+            Lease Start Date
+            Lease End Date        
+    """
+    FloatFields = [fieldnames.index("Lease Years"),      fieldnames.index("Current Rent")  ]
+    DateFields  = [fieldnames.index("Lease Start Date"), fieldnames.index("Lease End Date")]
+    rowI = 0
+    for row in db:
+        for fI in FloatFields:
+            try:
+                db[rowI][fI] = float(row[fI])
+            except:
+                db[rowI][fI] = 0
+        for dI in DateFields:
+            try:
+                db[rowI][dI] = datetime.strptime(row[dI],"%d %b %Y")
+            except:
+                db[rowI][dI] = datetime.today()
+        rowI += 1
+        
+    return (fieldnames, db)
 
 def loadMastData():
     """
@@ -8,9 +38,11 @@ def loadMastData():
             fieldnames and 
             data as a list of lists    
     """
+    #   load:
     req = urllib.request.urlopen("https://datamillnorth.org/download/mobile-phone-masts/4ae9320c-e678-4e51-980e-b6d516f40bb4/Mobile%2520Phone%2520Masts.csv")
     req = req.read().decode('utf-8')
     csvDict = csv.DictReader(req.splitlines())
+    #dumpAll(csvDict, 5)
     #   parse fieldnames then data: (overkill)
     db = []
     fieldnames = []
@@ -20,13 +52,112 @@ def loadMastData():
         [rec.append(row.get(f,"")) for f in fieldnames]
         db.append(rec)
         
-    return (fieldnames, db)
+    return cleanMastData(fieldnames, db)
 
-def loadMasterData_tests():
-    fieldnames, db = loadMasterData()
+def loadMastData_tests():
+    fieldnames, db = loadMastData()
     # expecting 42 rows
-    ans = "loadMasterData %s"
-    if len(db) == 42:
+    ans = "loadMastData: %s "
+    n = len(db)
+    if n == 42:
         return ans % "Correct number of rows loaded"
     else:
-        return ans % "i rows imported - should be 42"
+        return ans % ("%s rows imported - should be 42" % str(n))
+
+
+def dumpAll(csv, n=2):
+    """
+        Examine the incoming data
+    """
+    i=1
+    for row in csv:
+        print()
+        [print (k," - ",v) for k,v in row.items()]
+        i += 1
+        if i >= n: return True
+    return True
+
+def T1():
+    """
+        Option 1
+        ========
+        add a sort column
+        sort by Current Rent ascending
+        tidy up the sort column
+        output first 5 rows
+        Option 2
+        ========
+        copy the database
+        add a sort column
+        sort
+        (nothing to tidy)
+        output first 5 rows
+        
+        Option 1 chosen because the available memory might be an issue with bigger data
+    """
+    global fieldnames, db
+    fieldnamesI = fieldnames.index("Current Rent")
+    i = 0
+    for row in db:
+        db[i] = [row[fieldnamesI]] + db[i]
+        i += 1
+    db.sort()
+    i = 0
+    for row in db:
+        db[i] = row[1:]
+        i += 1
+    ans = []
+    for i in range(5):
+        t = db[i]
+        ans.append(repr(t))
+        print(t)
+    return ans
+
+def T1_tests():
+    global fieldnames, db
+    test = T1()
+    ans = "\nTask 1: %s "
+    # expecting 5 rows
+    n = len(test)
+    if len(test) == 5:
+        ansT = ans % "Correct number of rows output"
+    else:
+        ansT = ans % ("%s rows output - should be 5" % str(n))
+    # expecting db sorted by Current Rent ascending
+    good = True
+    fieldnamesI = fieldnames.index("Current Rent") # inserted as sort field
+    min = db[0][fieldnamesI]
+    for row in db:
+        if row[fieldnamesI] < min: good = False
+        min = row[fieldnamesI]
+    if good: 
+        ansT += ans % "Data is sorted"
+    else:
+        ansT += ans % "Data is not sorted"
+    return ansT
+
+def T2():
+    global fieldnames, db
+
+def T2_tests():
+    global fieldnames, db
+    #expecting all Lease Years to be 25
+
+def T3():
+    global fieldnames, db
+
+def T3_tests():
+    global fieldnames, db
+
+def T4():
+    global fieldnames, db
+
+def T4_tests():
+    global fieldnames, db
+
+opts  = [ "T%s"      % str(i)  for i in range(1,5)] + ["T%s_tests" % str(i) for i in range(1,5)] # R1 through R4
+opts.append("allRequirements")
+opts.append("allTests")
+opts.append("all")
+
+fieldnames, db = loadMastData()
