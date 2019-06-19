@@ -13,8 +13,14 @@ def cleanMastData(fieldnames, db):
             Lease Start Date
             Lease End Date        
     """
-    FloatFields = [fieldnames.index("Lease Years"),      fieldnames.index("Current Rent")  ]
-    DateFields  = [fieldnames.index("Lease Start Date"), fieldnames.index("Lease End Date")]
+    f = {}
+    i = 0
+    for el in fieldnames:
+        f[el] = i
+        i += 1
+    fieldnames = f
+    FloatFields = [fieldnames["Lease Years"],      fieldnames["Current Rent"]  ]
+    DateFields  = [fieldnames["Lease Start Date"], fieldnames["Lease End Date"]]
     rowI = 0
     for row in db:
         for fI in FloatFields:
@@ -28,7 +34,6 @@ def cleanMastData(fieldnames, db):
             except:
                 db[rowI][dI] = datetime.today()
         rowI += 1
-        
     return (fieldnames, db)
 
 def loadMastData():
@@ -96,7 +101,7 @@ def T1():
         Option 1 chosen because the available memory might be an issue with bigger data
     """
     global fieldnames, db
-    fieldnamesI = fieldnames.index("Current Rent")
+    fieldnamesI = fieldnames["Current Rent"]
     i = 0
     for row in db:
         db[i] = [row[fieldnamesI]] + db[i]
@@ -125,7 +130,7 @@ def T1_tests():
         ansT = ans % ("FAIL! %s rows output - should be 5" % str(n))
     # expecting db sorted by Current Rent ascending
     good = True
-    fieldnamesI = fieldnames.index("Current Rent") # inserted as sort field
+    fieldnamesI = fieldnames["Current Rent"] # inserted as sort field
     min = db[0][fieldnamesI]
     for row in db:
         if row[fieldnamesI] < min: good = False
@@ -139,8 +144,8 @@ def T1_tests():
 def T2():
     global fieldnames, db
     ans = []
-    fieldI = fieldnames.index("Lease Years")
-    rentI = fieldnames.index("Current Rent")
+    fieldI = fieldnames["Lease Years"]
+    rentI = fieldnames["Current Rent"]
     totalRent = 0
     for row in db:
         if row[fieldI] == 25:
@@ -157,7 +162,7 @@ def T2_tests():
     #expecting all Lease Years to be 25
     test = T2()
     ans = "\nTask 2: %s "
-    fieldI = fieldnames.index("Lease Years")
+    fieldI = fieldnames["Lease Years"]
     good = True
     for row in test:
         if test[fieldI] != 25:
@@ -169,7 +174,7 @@ def T2_tests():
 
 def T3():
     global fieldnames, db
-    tenntI = fieldnames.index("Tenant Name")
+    tenntI = fieldnames["Tenant Name"]
     ans = {}
     for row in db:
         tennt = row[tenntI]
@@ -184,12 +189,27 @@ def T3():
 
 def T3_tests():
     global fieldnames, db
+    test = T3()
+    ans = "\nTask 3: %s "
 
 def T4():
     global fieldnames, db
+    #   Assume dates are inclusive
+    DateA = datetime.strptime("01 Jun 1999","%d %b %Y")
+    DateZ = datetime.strptime("31 Aug 2007","%d %b %Y")
+    print("Task 4")
+    print("======")
+    for row in db:
+        if row[fieldnames["Lease Start Date"]] >= DateA:
+            if row[fieldnames["Lease Start Date"]] <= DateZ:
+                row[fieldnames["Lease Start Date"]] = datetime.strftime(row[fieldnames["Lease Start Date"]],"%d/%m/%Y")
+                row[fieldnames["Lease End Date"]] = datetime.strftime(row[fieldnames["Lease End Date"]],"%d/%m/%Y")
+                print(repr(row))
 
 def T4_tests():
     global fieldnames, db
+    test = T4()
+    ans = "\nTask 4: %s "
 
 opts  = [ "T%s"      % str(i)  for i in range(1,5)] + ["T%s_tests" % str(i) for i in range(1,5)] # R1 through R4
 opts.append("allRequirements")
