@@ -1,7 +1,8 @@
 Notes - still to complete:
 
 Some of the output formatting is very basic
-Command line parameters
+
+Command line parameters to be directed using locals()
 
 
 
