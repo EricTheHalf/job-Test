@@ -1,0 +1,16 @@
+import csv
+import urllib.request
+
+def loadMastData():
+    """
+        Reads incoming
+        Returns 
+            fieldnames and 
+            data as a list of lists    
+    """
+    req = urllib.request.urlopen("https://datamillnorth.org/download/mobile-phone-masts/4ae9320c-e678-4e51-980e-b6d516f40bb4/Mobile%2520Phone%2520Masts.csv")
+    req = req.read().decode('utf-8')
+    csvDict = csv.DictReader(req.splitlines())
+
+def loadMasterData_tests():
+    
